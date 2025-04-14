@@ -1,0 +1,78 @@
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+
+export default function SalesNavFrontend() {
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [resultUrl, setResultUrl] = useState<string | null>(null);
+
+  const handleUpload = async () => {
+    if (!file) return;
+    setUploading(true);
+    setProgress(10);
+
+    // Simuliertes Upload und Verarbeitung (Mock)
+    setTimeout(() => setProgress(70), 1000);
+    setTimeout(() => {
+      setProgress(100);
+      setResultUrl("/example_output.csv"); // Placeholder-Link
+      setUploading(false);
+    }, 2000);
+  };
+
+  return (
+    <div className="min-h-screen bg-white text-black p-6">
+      <div className="max-w-xl mx-auto">
+        <div className="flex justify-center mb-6">
+          <img
+            src="https://www.kundenbeispiele.de/wp-content/uploads/2023/11/Design-ohne-Titel-2023-11-02T085025.735-e1723466180213.png"
+            alt="Logo"
+            className="h-24"
+          />
+        </div>
+
+        <Card className="shadow-xl rounded-2xl border-black">
+          <CardContent className="space-y-4 p-6">
+            <h1 className="text-2xl font-bold">Sales Navigator Scraper</h1>
+            <div className="space-y-2">
+              <Label htmlFor="csv">CSV-Datei hochladen</Label>
+              <Input
+                id="csv"
+                type="file"
+                accept=".csv"
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+              />
+            </div>
+
+            <Button
+              disabled={!file || uploading}
+              className="bg-mint-500 text-black hover:bg-mint-600"
+              onClick={handleUpload}
+            >
+              Starten
+            </Button>
+
+            {uploading && <Progress value={progress} />}
+
+            {resultUrl && (
+              <div className="pt-4">
+                <a
+                  href={resultUrl}
+                  className="underline text-mint-700"
+                  download
+                >
+                  Ergebnis herunterladen
+                </a>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
